@@ -1,0 +1,7 @@
+-Iinclude
+-Llib
+-std=c++17
+-Wall
+-Werror
+-Wpedantic
+-lcurl
