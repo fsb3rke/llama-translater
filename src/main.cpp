@@ -2,10 +2,10 @@
 #include <string>
 #include <llhttp.hpp>
 #include <sstream>
-#include <Windows.h>
+#include <Windows.h> // TODO: (0) make cross platform
 
 int main(int argc, char *argv[]) { // main.exe port model language text
-    SetConsoleOutputCP(65001);
+    SetConsoleOutputCP(65001); // TODO: (0) make cross platform
     if (argc < 5) {
         std::cerr << "llama-translater port model language text\n\tport\t\t=> served ollama port.\n\tmodel\t\t=> model to be used in ollama.\n\tlanguage\t=> language to be using at translation.\n\ttext" << std::endl;
         return 1;
