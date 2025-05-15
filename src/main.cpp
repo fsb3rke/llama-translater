@@ -2,8 +2,10 @@
 #include <string>
 #include <llhttp.hpp>
 #include <sstream>
+#include <Windows.h>
 
 int main(int argc, char *argv[]) { // main.exe port model language text
+    SetConsoleOutputCP(65001);
     if (argc < 5) {
         std::cerr << "llama-translater port model language text\n\tport\t\t=> served ollama port.\n\tmodel\t\t=> model to be used in ollama.\n\tlanguage\t=> language to be using at translation.\n\ttext" << std::endl;
         return 1;
