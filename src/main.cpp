@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) { // main.exe port model language text
                     << "    \"stream\": false\n"
                     << "}";
 
-                std::string response = llhttp::POST(("http://localhost:" + port + "/api/generate"), oss.str());
+                std::string response = llhttp::POST(("http://localhost:" + table[1][0].get_text() + "/api/generate"), oss.str());
 
                 nlohmann::json parsed = nlohmann::json::parse(response); // TODO: (2)
 
