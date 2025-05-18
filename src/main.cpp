@@ -24,19 +24,6 @@ int bgetch(void);
 
 int main(int argc, char *argv[]) { // main.exe port model language text
     SetConsoleOutputCP(65001); // TODO: (0)
-    if (argc < 5) {
-        std::cerr << "llama-translater port model language text\n\tport\t\t=> served ollama port.\n\tmodel\t\t=> model to be used in ollama.\n\tlanguage\t=> language to be using at translation.\n\ttext" << std::endl;
-        return 1;
-    }
-
-    std::string port = argv[1];
-    std::string model = argv[2];
-    std::string language = argv[3];
-    std::string text = argv[4];
-
-    if (text.front() == '"' && text.back() == '"') {
-        text = text.substr(1, text.length() - 2);
-    }
 
     tabulate::Table table;
     table.add_row({"Port", "Model", "Language", "Text", "OK", "OUTPUT"});
