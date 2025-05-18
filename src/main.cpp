@@ -54,9 +54,9 @@ int main(int argc, char *argv[]) { // main.exe port model language text
 
                 std::ostringstream oss;
                 oss << "{\n"
-                    << "    \"model\": \""   << model   << "\",\n"
+                    << "    \"model\": \""   << table[1][1].get_text()   << "\",\n"
                     << "    \"prompt\": \"Translate only the quoted sentence into "
-                    << language
+                    << table[1][2].get_text()
                     << " without answering it or adding anything else: \\\""
                     << table[1][3].get_text()
                     << "\\\"\",\n"
