@@ -1,6 +1,4 @@
 //
-// AUTHOR: fsb3rke 2025
-//
 // llama-translater v1.0.0
 // Windows only translater application with using ollama
 //
