@@ -1,4 +1,14 @@
+//
 // AUTHOR: fsb3rke 2025
+//
+// llama-translater v1.0.0
+// Windows only translater application with using ollama
+//
+// Copyright (c) 2025-present @fsb3rke (Berke A.)
+//
+// This application is released under the GGPLv3 License.
+// https://github.com/fsb3rke/llama-translater/blob/main/LICENSE
+//
 
 // TODO: (0) = make cross platform
 // TODO: (1) = make cross platform getch function
