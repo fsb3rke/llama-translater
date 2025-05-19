@@ -45,9 +45,6 @@ int bgetch(void);
 void crossClear(void);
 
 int main(int argc, char *argv[]) { // main.exe port model language text
-	for (int i = 0; i < 10; ++i) {
-		std::cout << bgetch() << std::endl;
-	}
 #ifdef _WIN32
 	SetConsoleOutputCP(65001);
 #endif
