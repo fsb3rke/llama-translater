@@ -44,7 +44,7 @@ constexpr auto BK_ENTER = 10;
 int bgetch(void);
 void crossClear(void);
 
-int main(int argc, char *argv[]) { // main.exe port model language text
+int main() {
 #ifdef _WIN32
 	SetConsoleOutputCP(65001);
 #endif
