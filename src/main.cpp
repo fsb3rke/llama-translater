@@ -8,17 +8,25 @@
 // https://github.com/fsb3rke/llama-translater/blob/main/LICENSE
 //
 
-// TODO: (0) = make cross platform
-// TODO: (1) = make cross platform getch function
 // TODO: (2) = make character limit for each line
 
-#include <Windows.h> // TODO: (0)
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
+#ifdef _WIN32
+#include <conio.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+#include <cstdio>
+#endif
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <llhttp.hpp>
 #include <sstream>
-#include <conio.h> // TODO: (1)
 #include <tabulate.hpp>
 #include <nlohmann/json.hpp>
 
@@ -26,13 +34,23 @@
 constexpr auto BK_LEFT = 331;
 constexpr auto BK_RIGHT = 333;
 constexpr auto BK_ESC = 27;
+
+#ifdef _WIN32
 constexpr auto BK_ENTER = 13;
+#else
+constexpr auto BK_ENTER = 10;
+#endif
 
 int bgetch(void);
+void crossClear(void);
 
 int main(int argc, char *argv[]) { // main.exe port model language text
-    SetConsoleOutputCP(65001); // TODO: (0)
-
+	for (int i = 0; i < 10; ++i) {
+		std::cout << bgetch() << std::endl;
+	}
+#ifdef _WIN32
+	SetConsoleOutputCP(65001);
+#endif
     tabulate::Table table;
     table.add_row({"Port", "Model", "Language", "Text", "OK", "OUTPUT"});
     table.add_row({"", "", "", "", "BTN", ""});
@@ -43,7 +61,7 @@ int main(int argc, char *argv[]) { // main.exe port model language text
     std::string buffer;
 
     while (1) {
-        system("cls");
+        crossClear();
 
         if (isEditing) {
             table[1][x].set_text(buffer + "|");
@@ -114,11 +132,45 @@ int main(int argc, char *argv[]) { // main.exe port model language text
     return 0;
 }
 
-int bgetch(void) {
-    int ch = _getch();
+void crossClear(void) {
+	#ifdef _WIN32
+		system("cls");
+	#else
+		system("clear");
+	#endif
+}
 
+int bgetch(void) {
+#ifdef _WIN32
+    int ch = _getch();
     if (ch == 0 || ch == 224)
         ch = 256 + _getch();
-
     return ch;
+#else
+    struct termios oldt, newt;
+    int ch;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    ch = getchar();
+
+    if (ch == 27) {
+        if (getchar() == '[') {
+            char asd = getchar();
+            switch (asd) {
+                case 'A': ch = 1;
+                case 'B': ch = 1;
+                case 'D': ch = BK_LEFT;  break;
+                case 'C': ch = BK_RIGHT; break;
+                default: break;
+            }
+        }
+    }
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+#endif
 }
