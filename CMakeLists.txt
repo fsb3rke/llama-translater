@@ -21,8 +21,11 @@ set(SOURCES
 
 add_executable(llama-translater ${SOURCES})
 
-target_link_libraries(llama-translater libcurl)
-
+if(MSVC)
+    target_link_libraries(llama-translater libcurl)
+else()
+    target_link_libraries(llama-translater curl)
+endif()
 
 add_custom_command(TARGET llama-translater POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different

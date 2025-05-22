@@ -8,8 +8,6 @@
 // https://github.com/fsb3rke/llama-translater/blob/main/LICENSE
 //
 
-// TODO: (2) = make character limit for each line
-
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -30,6 +28,25 @@
 #include <tabulate.hpp>
 #include <nlohmann/json.hpp>
 
+#ifdef _WIN32
+size_t get_terminal_width() {
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
+        return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    }
+    return 80;
+}
+#else
+#include <sys/ioctl.h>
+#include <unistd.h>
+size_t get_terminal_width() {
+    struct winsize w{};
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0) {
+        return w.ws_col;
+    }
+    return 80;
+}
+#endif
 
 constexpr auto BK_LEFT = 331;
 constexpr auto BK_RIGHT = 333;
@@ -51,6 +68,8 @@ int main() {
     tabulate::Table table;
     table.add_row({"Port", "Model", "Language", "Text", "OK", "OUTPUT"});
     table.add_row({"", "", "", "", "BTN", ""});
+    table.format().width(get_terminal_width() / 10);
+
     table[0][0].format().font_color(tabulate::Color::red);
     table[1][0].format().font_color(tabulate::Color::red);
     int x = 0;
@@ -64,6 +83,11 @@ int main() {
             table[1][x].set_text(buffer + "|");
         }
 
+        for (size_t row = 0; row < table.size(); ++row) {
+            for (size_t col = 0; col < table[row].size(); ++col) {
+                table[row][col].format().width(get_terminal_width() / 10);
+            }
+        }
         std::cout << table << std::endl;
 
         int ch = bgetch();
@@ -88,7 +112,7 @@ int main() {
 
                 std::string response = llhttp::POST(("http://localhost:" + table[1][0].get_text() + "/api/generate"), oss.str());
 
-                nlohmann::json parsed = nlohmann::json::parse(response); // TODO: (2)
+                nlohmann::json parsed = nlohmann::json::parse(response);
 
                 table[1][5].set_text(parsed["response"]);
             } else {
